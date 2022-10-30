@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flufikdocs
+  namespace: flufik-docs
+  labels:
+    app.kubernetes.io/instance: flufikdocs
+    app.kubernetes.io/name: flufikdocs
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: flufikdocs
+        app.kubernetes.io/name: flufikdocs
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: flufikdocs
+          image: eduard1001171985/mkdocs-webhooks:v1
+          env:
+            - name: REPOSITORY
+              value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+              name: flufikdocs
+              protocol: TCP
+          resources: {}
+          securityContext: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: flufikdocs
+      app.kubernetes.io/name: flufikdocs

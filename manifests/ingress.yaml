@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: zerossl-prod
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app.kubernetes.io/instance: flufikdocs
+    app.kubernetes.io/name: flufikdocs
+  name: flufikdocs
+  namespace: flufik-docs
+spec:
+  rules:
+    - host: flufik.docs.arencloud.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: flufikdocs-svc
+                port:
+                  number: 80
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - flufik.docs.arencloud.com
+      secretName: tls-flufikdocs
